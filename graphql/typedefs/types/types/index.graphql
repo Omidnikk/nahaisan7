@@ -1,0 +1,942 @@
+type Order {
+  _id: ID!
+  deliveryAddress: DeliveryAddress
+  deliveryCharges: Float
+  orderAmount: Float
+  paidAmount: Float
+  paymentMethod: String
+  orderId: String
+  user: User
+  items: [OrderItem!]!
+  reason: String
+  status: String
+  paymentStatus: String
+  orderStatus: String
+  createdAt: String
+  review: Review
+  rider: Rider
+  zone: Zone
+  isPickedUp: Boolean
+  tipping: Float
+  taxationAmount: Float
+  instructions: String
+  orderDate: String
+  preparationTime: String
+  acceptedAt: String
+  isRinged: Boolean
+}
+type User {
+  _id: ID!
+  name: String
+  email: String
+  phone: String
+  addresses: [Address!]
+}
+type Profile {
+  _id: ID!
+  name: String
+  phone: String
+  phoneIsVerified: Boolean
+  email: String
+  emailIsVerified: Boolean
+  notificationToken: String
+  isActive: Boolean
+  isOrderNotification: Boolean
+  isOfferNotification: Boolean
+  addresses: [Address!]
+  favourite: [String]
+}
+type Address {
+  _id: ID!
+  label: String
+  deliveryAddress: String
+  details: String
+  location: Location
+  selected: Boolean
+}
+type Location {
+  coordinates: [Float!]!
+}
+type DeliveryAddress {
+  location: Location
+  deliveryAddress: String
+  details: String
+  label: String
+  id: String
+}
+type OrderItem {
+  _id: ID!
+  food: Food
+  variation: Variation
+  addons: [Addon!]!
+  specialInstructions: String
+  quantity: Int
+  title: String
+  description: String
+  image: String
+  isActive: Boolean
+  createdAt: String
+  updatedAt: String
+}
+type Food {
+  _id: ID!
+  title: String
+  description: String
+  image: String
+}
+type Variation {
+  _id: ID!
+  title: String
+  price: Float
+  discounted: Float
+  addons: [Boolean!]
+}
+type Addon {
+  _id: ID!
+  title: String
+  description: String
+  options: [Option!]!
+  quantityMinimum: Int
+  quantityMaximum: Int
+}
+type Option {
+  _id: ID!
+  title: String
+  description: String
+  price: Float
+}
+type Review {
+  _id: ID!
+  rating: Int
+  description: String
+  order: Order
+  restaurant: Restaurant
+  createdAt: String
+  isActive: Boolean
+  updatedAt: String
+}
+type Rider {
+  _id: ID!
+  name: String
+  username: String
+  password: String
+  phone: String
+  available: Boolean
+  zone: Zone
+  currentWalletAmount: Float
+  email: String
+  image: String
+  isActive: Boolean
+  createdAt: String
+  updatedAt: String
+  accountNumber: String
+  totalWalletAmount: Float
+  withdrawnWalletAmount: Float
+  location: Location
+}
+type Zone {
+  _id: ID!
+  title: String
+  description: String
+  location: Location
+  isActive: Boolean
+  tax: Float
+}
+type Vendor {
+  _id: ID!
+  email: String
+  userType: String
+  restaurants: [Restaurant!]!
+}
+type Restaurant {
+  _id: ID!
+  orderId: Int
+  orderPrefix: String
+  slug: String
+  name: String
+  image: String
+  logo: String
+  address: String
+  location: Location
+  deliveryBounds: DeliveryBounds
+  deliveryTime: String
+  minimumOrder: Float
+  isActive: Boolean
+  commissionRate: Float
+  tax: Float
+  username: String
+  password: String
+  isAvailable: Boolean
+  stripeDetailsSubmitted: Boolean
+  openingTimes: [OpeningTime!]
+  owner: User
+  shopType: String
+  cuisines: [String!]
+  categories: [Category!]
+  options: [Option!]
+  addons: [Addon!]
+  reviewData: ReviewData
+  sections: [String]
+  rating: Float
+  notificationToken: String
+  enableNotification: Boolean
+}
+type DeliveryBounds {
+  coordinates: [[Float!]!]
+}
+type OpeningTime {
+  day: String
+  times: [Time!]
+}
+type Time {
+  startTime: String
+  endTime: String
+}
+type Category {
+  _id: ID!
+  title: String
+  foods: [Food!]
+  createdAt: String
+  updatedAt: String
+}
+type OrdersByDateRange {
+  totalAmountCashOnDelivery: Float
+  countCashOnDeliveryOrders: Int
+}
+type DashboardTotal {
+  totalOrders: Int
+  totalSales: Float
+}
+type DashboardSales {
+  orders: [OrderCount!]!
+}
+type DashboardOrders {
+  orders: [OrderCount!]!
+}
+type OrderCount {
+  day: String
+  count: Int
+  amount: Float
+}
+type DashboardData {
+  totalOrders: Int
+  totalUsers: Int
+  totalSales: Float
+  orders: [OrderCount!]!
+}
+type Configuration {
+  _id: ID!
+  currency: String
+  currencySymbol: String
+  deliveryRate: Float
+  twilioEnabled: Boolean
+  androidClientID: String
+  iOSClientID: String
+  appAmplitudeApiKey: String
+  googleApiKey: String
+  expoClientID: String
+  customerAppSentryUrl: String
+  termsAndConditions: String
+  privacyPolicy: String
+  testOtp: String
+  skipMobileVerification: Boolean
+  skipEmailVerification: Boolean
+  restaurantAppSentryUrl: String
+  riderAppSentryUrl: String
+  webClientID: String
+  webSentryUrl: String
+  publishableKey: String
+  clientId: String
+  costType: String
+  vapidKey: String
+}
+type CouponResult {
+  coupons: [Coupon!]!
+  totalCount: Int!
+}
+type Coupon {
+  _id: ID!
+  title: String!
+  discount: Float!
+  enabled: Boolean!
+}
+type Tax {
+  _id: ID!
+  taxationCharges: Float
+  enabled: Boolean
+}
+type Cuisine {
+  _id: ID!
+  name: String
+  description: String
+  image: String
+  shopType: String
+}
+type Banner {
+  _id: ID!
+  title: String
+  description: String
+  action: String
+  screen: String
+  file: String
+  parameters: String
+}
+type Tip {
+  _id: ID!
+  tipVariations: [Float!]!
+  enabled: Boolean
+}
+type Offer {
+  _id: ID!
+  name: String
+  tag: String
+  restaurants: [String!]
+}
+type Section {
+  _id: ID!
+  name: String
+  enabled: Boolean
+  restaurants: [String!]
+}
+type UserResult {
+  users: [User!]!
+  totalCount: Int!
+}
+type RiderResult {
+  riders: [Rider!]!
+  totalCount: Int!
+}
+type WithdrawRequestResult {
+  requests: [WithdrawRequest!]!
+  totalCount: Int!
+}
+type WithdrawRequest {
+  _id: ID!
+  requestId: String!
+  requestAmount: Float!
+  requestTime: String!
+  rider: Rider!
+  status: String!
+}
+
+type OrderPagination {
+  orders: [Order!]!
+  orderCount: Int!
+  page: Int!
+  rowsPerPage: Int!
+}
+
+type Country {
+  cities: [City!]!
+}
+type City {
+  id: Int
+  name: String
+  latitude: Float
+  longitude: Float
+}
+type Chat {
+  id: ID!
+  message: String
+  user: ChatUser
+  createdAt: String
+}
+type ChatUser {
+  id: ID!
+  name: String
+}
+type RestaurantList {
+  offers: [Offer!]
+  sections: [Section!]
+  restaurants: [Restaurant!]
+}
+type RestaurantListPreview {
+  offers: [Offer!]
+  sections: [Section!]
+  restaurants: [RestaurantPreview!]
+}
+type RestaurantPreview {
+  _id: ID!
+  orderId: Int
+  orderPrefix: String
+  name: String
+  image: String
+  address: String
+  username: String
+  password: String
+  deliveryTime: String
+  minimumOrder: Float
+  sections: [String]
+  rating: Float
+  isActive: Boolean
+  isAvailable: Boolean
+  slug: String
+  stripeDetailsSubmitted: Boolean
+  commissionRate: Float
+  tax: Float
+  notificationToken: String
+  enableNotification: Boolean
+  shopType: String
+  cuisines: [String]
+  keywords: [String]
+  tags: [String]
+  reviewCount: Int
+  reviewAverage: Float
+  openingTimes: [OpeningTime!]
+}
+type PopularItem {
+  id: ID!
+  count: Int
+}
+type DefaultRestaurantCreds {
+  restaurantUsername: String
+  restaurantPassword: String
+}
+type DefaultRiderCreds {
+  riderUsername: String
+  riderPassword: String
+}
+type RiderEarning {
+  orderId: String
+  deliveryFee: Float
+  orderStatus: String
+  paymentMethod: String
+  deliveryTime: String
+}
+type RiderWithdrawRequest {
+  _id: ID!
+  requestId: String!
+  requestAmount: Float!
+  requestTime: String!
+  rider: Rider!
+  status: String!
+}
+type ChatMutationResponse {
+  success: Boolean
+  message: String
+  data: Chat
+}
+type AuthResponse {
+  userId: String
+  token: String
+  tokenExpiration: String
+  name: String
+  email: String
+  phone: String
+  isActive: Boolean
+  isNewUser: Boolean
+}
+type EmailExistResponse {
+  _id: String
+  userType: String
+  email: String
+}
+type PhoneExistResponse {
+  _id: String
+  userType: String
+  phone: String
+}
+type SendOtpToEmailResponse {
+  result: Boolean
+}
+type SendOtpToPhoneNumberResponse {
+  result: Boolean
+}
+type ResetPasswordResponse {
+  result: Boolean
+}
+type UpdateUserResponse {
+  _id: String
+  name: String
+  phone: String
+  phoneIsVerified: Boolean
+  emailIsVerified: Boolean
+  addresses: [Address!]
+  notificationToken: String
+  isOrderNotification: Boolean
+  isOfferNotification: Boolean
+}
+type UpdateNotificationStatusResponse {
+  _id: String
+  notificationToken: String
+  isOrderNotification: Boolean
+  isOfferNotification: Boolean
+}
+type PushTokenResponse {
+  _id: String
+  notificationToken: String
+}
+type ForgotPasswordResponse {
+  result: Boolean
+}
+type OrderStatusChangeResponse {
+  userId: String
+  origin: String
+  order: Order
+}
+type SubscriptionOrderResponse {
+  _id: String
+  orderStatus: String
+  rider: Rider
+  completionTime: String
+}
+type RiderLocation {
+  _id: String
+  location: Location
+}
+type SaveNotificationTokenWebResponse {
+  success: Boolean
+  message: String
+}
+type SubscriptionOrderType {
+  _id: String
+  orderId: String
+  restaurant: Restaurant
+  deliveryAddress: DeliveryAddress
+  items: [OrderItem]
+  user: User
+  paymentMethod: String
+  paidAmount: Float
+  orderAmount: Float
+  orderStatus: String
+  tipping: Float
+  taxationAmount: Float
+  status: String
+  paymentStatus: String
+  reason: String
+  isActive: Boolean
+  createdAt: String
+  orderDate: String
+  deliveryCharges: Float
+  isPickedUp: Boolean
+  preparationTime: String
+  isRinged: Boolean
+  rider: Rider
+}
+type SaveNotificationUserResponse {
+  success: Boolean
+}
+type RestaurantResponse {
+  _id: String
+  categories: [Category!]
+}
+type EmailConfigurationResponse {
+  _id: String
+  email: String
+  emailName: String
+  password: String
+  enableEmail: Boolean
+}
+type FormEmailConfigurationResponse {
+  _id: String
+  formEmail: String
+}
+type SendGridConfigurationResponse {
+  _id: String
+  sendGridApiKey: String
+  sendGridEnabled: Boolean
+  sendGridEmail: String
+  sendGridEmailName: String
+  sendGridPassword: String
+}
+type FirebaseConfigurationResponse {
+  _id: String
+  firebaseKey: String
+  authDomain: String
+  projectId: String
+  storageBucket: String
+  msgSenderId: String
+  appId: String
+  measurementId: String
+  vapidKey: String
+}
+type SentryConfigurationResponse {
+  _id: String
+  dashboardSentryUrl: String
+  webSentryUrl: String
+  apiSentryUrl: String
+  customerAppSentryUrl: String
+  restaurantAppSentryUrl: String
+  riderAppSentryUrl: String
+}
+type GoogleApiKeyConfigurationResponse {
+  _id: String
+  googleApiKey: String
+}
+type CloudinaryConfigurationResponse {
+  _id: String
+  cloudinaryUploadUrl: String
+  cloudinaryApiKey: String
+}
+type AmplitudeApiKeyConfigurationResponse {
+  _id: String
+  webAmplitudeApiKey: String
+  appAmplitudeApiKey: String
+}
+type GoogleClientIDConfigurationResponse {
+  _id: String
+  webClientID: String
+  androidClientID: String
+  iOSClientID: String
+  expoClientID: String
+}
+type WebConfigurationResponse {
+  _id: String
+  googleMapLibraries: String
+  googleColor: String
+}
+type AppConfigurationsResponse {
+  _id: String
+  termsAndConditions: String
+  privacyPolicy: String
+  testOtp: String
+}
+type DeliveryCostConfigurationResponse {
+  _id: String
+  deliveryRate: Float
+  costType: String
+}
+type PaypalConfigurationResponse {
+  _id: String
+  clientId: String
+  clientSecret: String
+  sandbox: Boolean
+}
+type StripeConfigurationResponse {
+  _id: String
+  publishableKey: String
+  secretKey: String
+}
+type TwilioConfigurationResponse {
+  _id: String
+  twilioAccountSid: String
+  twilioAuthToken: String
+  twilioPhoneNumber: String
+  twilioEnabled: Boolean
+}
+type VerificationConfigurationResponse {
+  skipEmailVerification: Boolean
+  skipMobileVerification: Boolean
+}
+type CurrencyConfigurationResponse {
+  _id: String
+  currency: String
+  currencySymbol: String
+}
+type OwnerLoginResponse {
+  userId: String
+  token: String
+  email: String
+  userType: String
+  restaurants: [Restaurant]
+}
+type SectionResponse {
+  _id: String
+  name: String
+  enabled: Boolean
+  restaurants: [Restaurant]
+}
+type VendorResponse {
+  _id: String
+  email: String
+}
+type UpdateOrderStatusResponse {
+  _id: String
+  orderStatus: String
+}
+type UploadTokenResponse {
+  _id: String
+  pushToken: String
+}
+input RiderInput {
+  _id: String
+  name: String
+  username: String
+  password: String
+  phone: String
+  available: Boolean
+  zone: String
+}
+type CreateRiderResponse {
+  _id: String
+  name: String
+  username: String
+  password: String
+  phone: String
+  available: Boolean
+  zone: Zone
+}
+type EditRiderResponse {
+  _id: String
+  name: String
+  username: String
+  phone: String
+  zone: Zone
+}
+type DeleteRiderResponse {
+  _id: String
+}
+type ToggleRiderResponse {
+  _id: String
+}
+type AssignRiderResponse {
+  _id: String
+  orderStatus: String
+  rider: Rider
+}
+type UpdatePaymentStatusResponse {
+  _id: String
+  paymentStatus: String
+  paidAmount: Float
+}
+type OfferResponse {
+  _id: String
+  name: String
+  tag: String
+  restaurants: [Restaurant]
+}
+type OptionResponse {
+  _id: String
+  options: [Option!]
+}
+type AddonResponse {
+  _id: String
+  addons: [Addon!]
+}
+type CreateOptionInput {
+  _id: ID
+  title: String
+  description: String
+  price: Float
+  restaurant: String
+}
+type AddonInput {
+  _id: ID
+  title: String!
+  description: String
+  options: [String]
+  quantityMinimum: Int
+  quantityMaximum: Int
+  restaurant: String
+}
+type editAddonInput {
+  _id: ID!
+  title: String!
+  description: String
+  options: [String]
+  quantityMinimum: Int
+  quantityMaximum: Int
+  restaurant: String
+}
+type editOptionInput {
+  _id: ID!
+  title: String
+  description: String
+  price: Float
+  restaurant: String
+}
+type CouponResponse {
+  _id: String
+  title: String
+  discount: Float
+  enabled: Boolean
+}
+type CouponInput {
+  _id: ID
+  title: String
+  discount: Float
+  enabled: Boolean
+  restaurant: String
+}
+type CuisineResponse {
+  _id: String
+  name: String
+  description: String
+  image: String
+  shopType: String
+}
+type CuisineInput {
+  _id: ID
+  name: String
+  description: String
+  image: String
+  shopType: String
+}
+type BannerResponse {
+  _id: String
+  title: String
+  description: String
+  action: String
+  file: String
+  screen: String
+  parameters: String
+}
+type BannerInput {
+  _id: ID
+  title: String
+  description: String
+  action: String
+  file: String
+  screen: String
+  parameters: String
+}
+type TippingResponse {
+  _id: String
+  tipVariations: [Float!]
+  enabled: Boolean
+}
+type TippingInput {
+  _id: ID
+  tipVariations: [Float!]
+  enabled: Boolean
+}
+type TaxationResponse {
+  _id: String
+  taxationCharges: Float
+  enabled: Boolean
+}
+type TaxationInput {
+  _id: ID
+  taxationCharges: Float
+  enabled: Boolean
+}
+type CreateVendorResponse {
+  _id: String
+  email: String
+  userType: String
+}
+type EditRestaurantResponse {
+  _id: String
+  orderId: Int
+  orderPrefix: String
+  name: String
+  image: String
+  slug: String
+  address: String
+  username: String
+  password: String
+  location: Location
+  isAvailable: Boolean
+  minimumOrder: Float
+  tax: Float
+  openingTimes: [OpeningTime!]
+  shopType: String
+  logo: String
+}
+type VendorResetPasswordResponse {
+  success: Boolean
+}
+input VendorInput {
+  _id: ID
+  email: String
+  userType: String
+  restaurants: [String]
+}
+input RestaurantProfileInput {
+  _id: ID
+  orderId: Int
+  orderPrefix: String
+  name: String
+  image: String
+  slug: String
+  address: String
+  username: String
+  password: String
+  location: CoordinatesInput
+  isAvailable: Boolean
+  minimumOrder: Float
+  tax: Float
+  openingTimes: [TimingsInput]
+  shopType: String
+  logo: String
+}
+input TimingsInput {
+  day: String!
+  times: [TimeInput!]
+}
+input TimeInput {
+  startTime: String!
+  endTime: String!
+}
+type ZoneResponse {
+  _id: String
+  title: String
+  description: String
+  location: Location
+  isActive: Boolean
+}
+input ZoneInput {
+  _id: ID
+  title: String
+  description: String
+  location: CoordinatesInput
+  isActive: Boolean
+}
+input CoordinatesInput {
+  coordinates: [Float!]!
+}
+input CircleBoundsInput {
+  center: CoordinatesInput
+  radius: Float
+}
+type SendNotificationUserResponse {
+  success: Boolean
+}
+type UpdateTimingsResponse {
+  _id: String
+  openingTimes: [OpeningTime!]
+}
+type updateDeliveryBoundsAndLocationResponse {
+  success: Boolean
+  message: String
+  data: updateDeliveryBoundsAndLocationData
+}
+type updateDeliveryBoundsAndLocationData {
+  _id: ID
+  deliveryBounds: DeliveryBounds
+  location: Location
+}
+type DeliveryBounds {
+  coordinates: [[Float!]!]
+}
+type Location {
+  coordinates: [Float!]!
+}
+type updateWithdrawReqStatusResponse {
+  success: Boolean
+  message: String
+  data: updateWithdrawReqStatusData
+}
+type updateWithdrawReqStatusData {
+  rider: updateWithdrawReqStatusRider
+  withdrawRequest: updateWithdrawReqStatusRequest
+}
+type updateWithdrawReqStatusRider {
+  _id: ID
+  currentWalletAmount: Float
+}
+type updateWithdrawReqStatusRequest {
+  _id: ID
+  status: String
+}
+type RiderLoginResponse {
+  userId: String
+  token: String
+}
+type assignOrderResponse {
+  _id: ID
+  orderStatus: String
+  rider: Rider
+}
+type updateLocationResponse {
+  _id: ID
+}
+input EarningsInput {
+  riderId: String
+  orderId: String
+  deliveryFee: Float
+  orderStatus: String
+  paymentMethod: String
+  deliveryTime: String
+  _id: String
+}

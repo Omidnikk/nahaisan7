@@ -1,0 +1,17 @@
+type Mutation {
+  sendChatMessage(
+    orderId: ID!
+    messageInput: ChatMessageInput!
+  ): ChatMutationResponse
+  riderLogin(
+    username: String
+    password: String
+    notificationToken: String
+  ): RiderLoginResponse
+  updateOrderStatusRider(id: String!, status: String!): OrderResponse
+  assignOrder(id: String!): assignOrderResponse
+  updateLocation(latitude: String!, longitude: String!): updateLocationResponse
+  toggleAvailablity(id: String): ToggleRiderResponse
+  createWithdrawRequest(amount: Float!): WithdrawRequest
+  createEarning(earningsInput: EarningsInput): RiderEarning
+}

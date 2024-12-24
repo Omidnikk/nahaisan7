@@ -1,0 +1,594 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String
+  role      String    @default("CUSTOMER") //  CUSTOMER or VENDOR
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[] @relation(name: "VendorProducts")
+  orders    Order[]   @relation(name: "CustomerOrders")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+  vendorId    Int
+  vendor      User     @relation(name: "VendorProducts", fields: [vendorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  products Product[]
+}
+
+model Order {
+  id           Int           @id @default(autoincrement())
+  customerId   Int
+  customer     User          @relation(name: "CustomerOrders", fields: [customerId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  orderdetails OrderDetails?
+}
+
+model OrderDetails {
+  id              Int         @id @default(autoincrement())
+  deliveryAddress String?
+  deliveryCharges Float?
+  orderAmount     Float?
+  paidAmount      Float?
+  paymentMethod   String?
+ 
+  reason          String?
+  status          String?
+  paymentStatus   String?
+  orderStatus     String?
+  createdAt       DateTime?
+  reviewId        String?
+  riderId         String?
+  order           Order       @relation(fields: [orderId], references: [id])
+  orderId         Int         @unique
+  items           OrderItem[] @relation(name: "OrderDetailsItems")
+}
+
+model UserType {
+  id    Int     @id @default(autoincrement())
+  name  String?
+  email String?
+  phone String?
+}
+
+model OrderItem {
+  id                  Int           @id @default(autoincrement())
+  orderDetailId       Int?
+  foodId              Int?
+  variationId         Int?
+  specialInstructions String?
+  quantity            Int?
+  orderDetail         OrderDetails? @relation(name: "OrderDetailsItems", fields: [orderDetailId], references: [id])
+  addons              AddonType[]   @relation(name: "OrderItemAddonTypes")
+}
+
+model FoodItem {
+  id          Int     @id @default(autoincrement())
+  title       String?
+  description String?
+  image       String?
+}
+
+model Variation {
+  id         Int      @id @default(autoincrement())
+  title      String?
+  price      Float?
+  discounted Boolean?
+}
+
+model AddonType {
+  id              Int          @id @default(autoincrement())
+  title           String?
+  description     String?
+  quantityMinimum Int?
+  quantityMaximum Int?
+  orderItemId     Int?
+  optionId        Int?
+  orderItem       OrderItem?   @relation(name: "OrderItemAddonTypes", fields: [orderItemId], references: [id])
+  options         OptionType[] @relation(name: "AddonTypeOptionTypes")
+
+  RestaurantOrderItem RestaurantOrderItem[] @relation(name: "RestaurantOrderItemAddonTypes")
+}
+
+model OptionType {
+  id          Int        @id @default(autoincrement())
+  title       String?
+  price       Float?
+  addonTypeId Int?
+  addonType   AddonType? @relation(name: "AddonTypeOptionTypes", fields: [addonTypeId], references: [id])
+}
+
+model RiderType {
+  id   Int     @id @default(autoincrement())
+  name String?
+}
+
+model ReviewType {
+  id          Int     @id @default(autoincrement())
+  rating      Float?
+  description String?
+}
+
+model Review {
+  id           Int       @id @default(autoincrement())
+  orderId      String?
+  restaurantId String?
+  rating       Float?
+  description  String?
+  createdAt    DateTime?
+}
+
+model OrderDateRangeResult {
+  id                        Int    @id @default(autoincrement())
+  totalAmountCashOnDelivery Float?
+  countCashOnDeliveryOrders Int?
+}
+
+model RestaurantOrder {
+  id                Int       @id @default(autoincrement())
+  orderId           String?
+  restaurantId      String?
+  deliveryAddressId String?
+  userId            String?
+  paymentMethod     String?
+  paidAmount        Float?
+  orderAmount       Float?
+  orderStatus       String?
+  status            String?
+  paymentStatus     String?
+  reason            String?
+  isActive          Boolean?
+  createdAt         DateTime?
+  deliveryCharges   Float?
+  tipping           Float?
+  taxationAmount    Float?
+  riderId           String?
+
+  items RestaurantOrderItem[] @relation(name: "RestaurantOrderItems")
+}
+
+model Restaurant {
+  id         Int     @id @default(autoincrement())
+  name       String?
+  image      String?
+  address    String?
+  locationId Int?
+}
+
+model Location {
+  id          Int     @id @default(autoincrement())
+  coordinates String?
+}
+
+model DeliveryAddress {
+  id              Int     @id @default(autoincrement())
+  locationId      Int?
+  deliveryAddress String?
+  details         String?
+  label           String?
+}
+
+model RestaurantOrderItem {
+  id                  Int              @id @default(autoincrement())
+  restaurantOrderId   Int?
+  title               String?
+  description         String?
+  image               String?
+  quantity            Int?
+  variationId         Int?
+  specialInstructions String?
+  isActive            Boolean?
+  createdAt           DateTime?
+  updatedAt           DateTime?
+  restaurantOrder     RestaurantOrder? @relation(name: "RestaurantOrderItems", fields: [restaurantOrderId], references: [id])
+  addons              AddonType[]      @relation(name: "RestaurantOrderItemAddonTypes")
+
+  ActiveOrder ActiveOrder[] @relation(name: "ActiveOrderItems")
+}
+
+model DashboardTotalResult {
+  id          Int    @id @default(autoincrement())
+  totalOrders Int?
+  totalSales  Float?
+}
+
+model DashboardSalesResult {
+  id Int @id @default(autoincrement())
+}
+
+model SalesOrder {
+  id     Int     @id @default(autoincrement())
+  day    String?
+  amount Float?
+}
+
+model DashboardOrdersResult {
+  id Int @id @default(autoincrement())
+}
+
+model OrdersOrder {
+  id    Int     @id @default(autoincrement())
+  day   String?
+  count Int?
+}
+
+model DashboardDataResult {
+  id          Int    @id @default(autoincrement())
+  totalOrders Int?
+  totalUsers  Int?
+  totalSales  Float?
+}
+
+model DashboardOrder {
+  id     Int     @id @default(autoincrement())
+  day    String?
+  count  Int?
+  amount Float?
+}
+
+model Configuration {
+  id                     Int      @id @default(autoincrement())
+  email                  String?
+  emailName              String?
+  password               String?
+  enableEmail            Boolean?
+  clientId               String?
+  clientSecret           String?
+  sandbox                Boolean?
+  publishableKey         String?
+  secretKey              String?
+  currency               String?
+  currencySymbol         String?
+  deliveryRate           Float?
+  twilioAccountSid       String?
+  twilioAuthToken        String?
+  twilioPhoneNumber      String?
+  twilioEnabled          Boolean?
+  formEmail              String?
+  sendGridApiKey         String?
+  sendGridEnabled        Boolean?
+  sendGridEmail          String?
+  sendGridEmailName      String?
+  sendGridPassword       String?
+  dashboardSentryUrl     String?
+  webSentryUrl           String?
+  apiSentryUrl           String?
+  customerAppSentryUrl   String?
+  restaurantAppSentryUrl String?
+  riderAppSentryUrl      String?
+  googleApiKey           String?
+  cloudinaryUploadUrl    String?
+  cloudinaryApiKey       String?
+  webAmplitudeApiKey     String?
+  appAmplitudeApiKey     String?
+  webClientID            String?
+  androidClientID        String?
+  iOSClientID            String?
+  expoClientID           String?
+  googleMapLibraries     String?
+  googleColor            String?
+  termsAndConditions     String?
+  privacyPolicy          String?
+  testOtp                String?
+  firebaseKey            String?
+  authDomain             String?
+  projectId              String?
+  storageBucket          String?
+  msgSenderId            String?
+  appId                  String?
+  measurementId          String?
+  isPaidVersion          Boolean?
+  skipEmailVerification  Boolean?
+  skipMobileVerification Boolean?
+  costType               String?
+  vapidKey               String?
+}
+
+model ActiveOrder {
+  id                Int                   @id @default(autoincrement())
+  zoneId            Int?
+  orderId           String?
+  restaurantId      Int?
+  deliveryAddressId Int?
+  userId            String?
+  paymentMethod     String?
+  paidAmount        Float?
+  orderAmount       Float?
+  orderStatus       String?
+  isPickedUp        Boolean?
+  status            String?
+  paymentStatus     String?
+  reason            String?
+  isActive          Boolean?
+  createdAt         DateTime?
+  deliveryCharges   Float?
+  riderId           Int?
+  items             RestaurantOrderItem[] @relation(name: "ActiveOrderItems")
+}
+
+model ZoneType {
+  id Int @id @default(autoincrement())
+}
+
+model ActiveOrdersWithPaginationResult {
+  id          Int  @id @default(autoincrement())
+  orderCount  Int?
+  page        Int?
+  rowsPerPage Int?
+}
+
+model Rider {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  username  String?
+  password  String?
+  phone     String?
+  available Boolean?
+  zoneId    Int?
+}
+
+model Zone {
+  id          Int      @id @default(autoincrement())
+  title       String?
+  description String?
+  locationId  Int?
+  isActive    Boolean?
+}
+
+model Vendor {
+  id       Int     @id @default(autoincrement())
+  email    String?
+  userType String?
+}
+
+model VendorRestaurant {
+  id          Int     @id @default(autoincrement())
+  orderId     String?
+  orderPrefix String?
+  slug        String?
+  name        String?
+  image       String?
+  address     String?
+  locationId  Int?
+  zoneId      Int?
+  shopType    String?
+}
+
+model Taxation {
+  id              Int      @id @default(autoincrement())
+  taxationCharges Float?
+  enabled         Boolean?
+}
+
+model CouponResult {
+  id         Int  @id @default(autoincrement())
+  totalCount Int?
+}
+
+model Coupon {
+  id       Int      @id @default(autoincrement())
+  title    String?
+  discount Float?
+  enabled  Boolean?
+}
+
+model Cuisine {
+  id          Int     @id @default(autoincrement())
+  name        String?
+  description String?
+  image       String?
+  shopType    String?
+}
+
+model Banner {
+  id          Int     @id @default(autoincrement())
+  title       String?
+  description String?
+  action      String?
+  screen      String?
+  file        String?
+  parameters  String?
+}
+
+model Tipping {
+  id            Int      @id @default(autoincrement())
+  tipVariations String?
+  enabled       Boolean?
+}
+
+model Addon {
+  id              Int     @id @default(autoincrement())
+  title           String?
+  description     String?
+  quantityMinimum Int?
+  quantityMaximum Int?
+  optionId        Int?
+}
+
+model OwnerRestaurants {
+  id       Int     @id @default(autoincrement())
+  email    String?
+  userType String?
+}
+
+model OwnerRestaurant {
+  id          Int     @id @default(autoincrement())
+  orderId     String?
+  orderPrefix String?
+  name        String?
+  slug        String?
+  image       String?
+  address     String?
+  username    String?
+  password    String?
+  locationId  Int?
+  shopType    String?
+}
+
+model RestaurantListItem {
+  id      Int     @id @default(autoincrement())
+  name    String?
+  address String?
+}
+
+model RestaurantType {
+  id             Int      @id @default(autoincrement())
+  name           String?
+  image          String?
+  orderPrefix    String?
+  slug           String?
+  address        String?
+  deliveryTime   Float?
+  minimumOrder   Float?
+  isActive       Boolean?
+  commissionRate Float?
+  tax            Float?
+  ownerId        Int?
+  shopType       String?
+}
+
+model RestaurantProfile {
+  id                     Int      @id @default(autoincrement())
+  orderId                String?
+  orderPrefix            String?
+  slug                   String?
+  name                   String?
+  image                  String?
+  logo                   String?
+  address                String?
+  locationId             Int?
+  deliveryBoundsId       Int?
+  username               String?
+  password               String?
+  deliveryTime           Float?
+  minimumOrder           Float?
+  tax                    Float?
+  isAvailable            Boolean?
+  stripeDetailsSubmitted Boolean?
+  shopType               String?
+  ownerId                Int?
+}
+
+model DeliveryBounds {
+  id          Int     @id @default(autoincrement())
+  coordinates String?
+}
+
+model OpeningTime {
+  id  Int     @id @default(autoincrement())
+  day String?
+}
+
+model TimeRange {
+  id        Int     @id @default(autoincrement())
+  startTime String?
+  endTime   String?
+}
+
+model RestaurantDetails {
+  id           Int     @id @default(autoincrement())
+  orderId      String?
+  orderPrefix  String?
+  slug         String?
+  name         String?
+  image        String?
+  address      String?
+  locationId   Int?
+  deliveryTime Float?
+  minimumOrder Float?
+  tax          Float?
+  shopType     String?
+}
+
+model RestaurantCategory {
+  id    Int     @id @default(autoincrement())
+  title String?
+}
+
+model RestaurantFood {
+  id          Int      @id @default(autoincrement())
+  title       String?
+  description String?
+  image       String?
+  isActive    Boolean?
+}
+
+model RestaurantFoodVariation {
+  id         Int      @id @default(autoincrement())
+  title      String?
+  price      Float?
+  discounted Boolean?
+}
+
+model Offer {
+  id   Int     @id @default(autoincrement())
+  name String?
+  tag  String?
+}
+
+model OfferRestaurant {
+  id   Int     @id @default(autoincrement())
+  name String?
+}
+
+model Section {
+  id      Int      @id @default(autoincrement())
+  name    String?
+  enabled Boolean?
+}
+
+model SectionRestaurant {
+  id   Int     @id @default(autoincrement())
+  name String?
+}
+
+model UsersResult {
+  id         Int  @id @default(autoincrement())
+  totalCount Int?
+}
+
+model RidersResult {
+  id         Int  @id @default(autoincrement())
+  totalCount Int?
+}
+
+model WithdrawRequestsResult {
+  id         Int  @id @default(autoincrement())
+  totalCount Int?
+}
+
+model WithdrawRequest {
+  id            Int       @id @default(autoincrement())
+  requestId     String?
+  requestAmount Float?
+  requestTime   DateTime?
+  riderId       Int?
+  status        String?
+}

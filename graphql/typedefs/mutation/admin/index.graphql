@@ -1,0 +1,145 @@
+type Mutation {
+  createFood(foodInput: FoodInput!): RestaurantResponse
+  editFood(foodInput: FoodInput!): RestaurantResponse
+  deleteFood(
+    id: String!
+    restaurant: String!
+    categoryId: String!
+  ): RestaurantResponse
+  createCategory(category: CategoryInput): RestaurantResponse
+  editCategory(category: CategoryInput): RestaurantResponse
+  deleteCategory(id: String!, restaurant: String!): RestaurantResponse
+  saveEmailConfiguration(
+    configurationInput: EmailConfigurationInput!
+  ): EmailConfigurationResponse
+  saveFormEmailConfiguration(
+    configurationInput: FormEmailConfigurationInput!
+  ): FormEmailConfigurationResponse
+  saveSendGridConfiguration(
+    configurationInput: SendGridConfigurationInput!
+  ): SendGridConfigurationResponse
+  saveFirebaseConfiguration(
+    configurationInput: FirebaseConfigurationInput!
+  ): FirebaseConfigurationResponse
+  saveSentryConfiguration(
+    configurationInput: SentryConfigurationInput!
+  ): SentryConfigurationResponse
+  saveGoogleApiKeyConfiguration(
+    configurationInput: GoogleApiKeyConfigurationInput!
+  ): GoogleApiKeyConfigurationResponse
+  saveCloudinaryConfiguration(
+    configurationInput: CloudinaryConfigurationInput!
+  ): CloudinaryConfigurationResponse
+  saveAmplitudeApiKeyConfiguration(
+    configurationInput: AmplitudeApiKeyConfigurationInput!
+  ): AmplitudeApiKeyConfigurationResponse
+  saveGoogleClientIDConfiguration(
+    configurationInput: GoogleClientIDConfigurationInput!
+  ): GoogleClientIDConfigurationResponse
+  saveWebConfiguration(
+    configurationInput: WebConfigurationInput!
+  ): WebConfigurationResponse
+  saveAppConfigurations(
+    configurationInput: AppConfigurationsInput!
+  ): AppConfigurationsResponse
+  saveDeliveryRateConfiguration(
+    configurationInput: DeliveryCostConfigurationInput!
+  ): DeliveryCostConfigurationResponse
+  savePaypalConfiguration(
+    configurationInput: PaypalConfigurationInput!
+  ): PaypalConfigurationResponse
+  saveStripeConfiguration(
+    configurationInput: StripeConfigurationInput!
+  ): StripeConfigurationResponse
+  saveTwilioConfiguration(
+    configurationInput: TwilioConfigurationInput!
+  ): TwilioConfigurationResponse
+  saveVerificationsToggle(
+    configurationInput: VerificationConfigurationInput!
+  ): VerificationConfigurationResponse
+  saveCurrencyConfiguration(
+    configurationInput: CurrencyConfigurationInput!
+  ): CurrencyConfigurationResponse
+  ownerLogin(email: String!, password: String!): OwnerLoginResponse
+  createSection(section: SectionInput!): SectionResponse
+  editSection(section: SectionInput!): SectionResponse
+  deleteSection(id: String!): SectionResponse
+  deleteVendor(id: String!): VendorResponse
+  updateOrderStatus(
+    id: String!
+    status: String!
+    reason: String
+  ): UpdateOrderStatusResponse
+  updateStatus(id: String!, orderStatus: String!): OrderResponse
+  uploadToken(id: String!, pushToken: String!): UploadTokenResponse
+  resetPassword(password: String!, token: String!): ResetPasswordResponse
+  createRider(riderInput: RiderInput!): CreateRiderResponse
+  editRider(riderInput: RiderInput!): EditRiderResponse
+  deleteRider(id: String!): DeleteRiderResponse
+  toggleAvailablity(id: String): ToggleRiderResponse
+  assignRider(id: String!, riderId: String!): AssignRiderResponse
+  updatePaymentStatus(id: String!, status: String!): UpdatePaymentStatusResponse
+  createOffer(offer: OfferInput!): OfferResponse
+  editOffer(offer: OfferInput!): OfferResponse
+  deleteOffer(id: String!): OfferResponse
+  createOptions(optionInput: CreateOptionInput): OptionResponse
+  createAddons(addonInput: AddonInput): AddonResponse
+  editAddon(addonInput: editAddonInput): AddonResponse
+  deleteAddon(id: String!, restaurant: String!): AddonResponse
+  deleteOption(id: String!, restaurant: String!): OptionResponse
+  editOption(optionInput: editOptionInput): OptionResponse
+  createCoupon(couponInput: CouponInput!): CouponResponse
+  editCoupon(couponInput: CouponInput!): CouponResponse
+  deleteCoupon(id: String!): CouponResponse
+  createCuisine(cuisineInput: CuisineInput!): CuisineResponse
+  editCuisine(cuisineInput: CuisineInput!): CuisineResponse
+  deleteCuisine(id: String!): CuisineResponse
+  createBanner(bannerInput: BannerInput!): BannerResponse
+  editBanner(bannerInput: BannerInput!): BannerResponse
+  deleteBanner(id: String!): BannerResponse
+  createTipping(tippingInput: TippingInput!): TippingResponse
+  editTipping(tippingInput: TippingInput!): TippingResponse
+  createTaxation(taxationInput: TaxationInput!): TaxationResponse
+  editTaxation(taxationInput: TaxationInput!): TaxationResponse
+  createVendor(vendorInput: VendorInput): VendorResponse
+  editVendor(vendorInput: VendorInput): VendorResponse
+  editRestaurant(restaurant: RestaurantProfileInput!): EditRestaurantResponse
+  createZone(zone: ZoneInput!): ZoneResponse
+  editZone(zone: ZoneInput!): ZoneResponse
+  deleteZone(id: String!): ZoneResponse
+  vendorResetPassword(
+    oldPassword: String!
+    newPassword: String!
+  ): VendorResetPasswordResponse
+  deleteRestaurant(id: String!): DeleteRestaurantResponse
+  updateTimings(
+    id: String!
+    openingTimes: [TimingsInput]
+  ): UpdateTimingsResponse
+  sendNotificationUser(
+    notificationTitle: String
+    notificationBody: String!
+  ): SendNotificationUserResponse
+  updateCommission(
+    id: String!
+    commissionRate: Float!
+  ): UpdateCommissionResponse
+  createRestaurant(
+    restaurant: RestaurantInput!
+    owner: ID!
+  ): CreateRestaurantResponse
+  updateDeliveryBoundsAndLocation(
+    id: ID!
+    boundType: String!
+    bounds: [[[Float!]]]
+    circleBounds: CircleBoundsInput
+    location: CoordinatesInput!
+    address: String
+    postCode: String
+    city: String
+  ): updateDeliveryBoundsAndLocationResponse
+  updateWithdrawReqStatus(
+    id: ID!
+    status: String!
+  ): updateWithdrawReqStatusResponse
+}

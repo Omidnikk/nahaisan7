@@ -1,0 +1,7 @@
+type Query {
+    restaurantOrders: [Order!]!
+    restaurant(id: String): Restaurant
+    configuration: Configuration
+    restaurantInfo(id:String):Restaurant
+  defaultRestaurantCreds: DefaultRestaurantCreds
+}

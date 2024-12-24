@@ -1,0 +1,21 @@
+type Query {
+    # users: [User!]!
+    profile: Profile
+    getCountryByIso(iso: String!): Country
+    order(id: String!): Order
+    orders(offset: Int): [Order!]!
+    nearByRestaurants(latitude: Float, longitude: Float, shopType: String): RestaurantList
+    nearByRestaurantsPreview(latitude: Float, longitude: Float, shopType: String): RestaurantListPreview
+    topRatedVendorsPreview(latitude: Float!, longitude: Float!): [RestaurantPreview!]!
+    restaurant(id: String): Restaurant
+    cuisines: [Cuisine!]!
+    rider(id: String): Rider
+    taxes: [Tax!]!
+    tips: [Tip!]!
+    userFavourite(latitude: Float, longitude: Float): [Restaurant!]!
+    chat(order: ID!): [Chat!]!
+    recentOrderRestaurantsPreview(latitude: Float!, longitude: Float!): [RestaurantPreview!]!
+    mostOrderedRestaurantsPreview(latitude: Float!, longitude: Float!): [RestaurantPreview!]!
+    relatedItems(itemId: String!, restaurantId: String!): String
+    popularItems(restaurantId: String!): [PopularItem!]!
+}

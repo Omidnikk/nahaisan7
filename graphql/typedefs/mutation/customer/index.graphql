@@ -1,0 +1,55 @@
+type Mutation {
+  sendChatMessage(
+    orderId: ID!
+    messageInput: ChatMessageInput!
+  ): ChatMutationResponse
+  login(
+    email: String
+    password: String
+    type: String!
+    appleId: String
+    name: String
+    notificationToken: String
+  ): AuthResponse
+  emailExist(email: String!): EmailExistResponse
+  phoneExist(phone: String!): PhoneExistResponse
+  sendOtpToEmail(email: String!, otp: String!): SendOtpToEmailResponse
+  sendOtpToPhoneNumber(
+    phone: String!
+    otp: String!
+  ): SendOtpToPhoneNumberResponse
+  resetPassword(password: String!, email: String!): ResetPasswordResponse
+  createUser(userInput: UserInput!): AuthResponse
+  updateUser(updateUserInput: UpdateUserInput!): UpdateUserResponse
+  updateNotificationStatus(
+    offerNotification: Boolean!
+    orderNotification: Boolean!
+  ): UpdateNotificationStatusResponse
+  placeOrder(
+    restaurant: String!
+    orderInput: [OrderInput!]!
+    paymentMethod: String!
+    couponCode: String
+    tipping: Float!
+    taxationAmount: Float!
+    address: AddressInput!
+    orderDate: String!
+    isPickedUp: Boolean!
+    deliveryCharges: Float!
+    instructions: String
+  ): Order
+  pushToken(token: String): PushTokenResponse
+  forgotPassword(email: String!, otp: String!): ForgotPasswordResponse
+  coupon(coupon: String!): Coupon
+  deleteAddress(id: ID!): UpdateUserResponse
+  createAddress(addressInput: AddressInput!): UpdateUserResponse
+  editAddress(addressInput: AddressInput!): UpdateUserResponse
+  changePassword(
+    oldPassword: String!
+    newPassword: String!
+  ): ChangePasswordResponse
+  selectAddress(id: String!): UpdateUserResponse
+  reviewOrder(reviewInput: ReviewInput!): Order
+  addFavourite(id: String!): UpdateUserResponse
+  saveNotificationTokenWeb(token: String!): SaveNotificationTokenWebResponse
+}

@@ -1,0 +1,39 @@
+type Query {
+    allOrders(page: Int): [Order!]!
+    reviews(restaurant: String!): [Review!]!
+    getOrdersByDateRange(startingDate: String!, endingDate: String!, restaurant: String!): OrdersByDateRange!
+    ordersByRestId(restaurant: String!, page: Int, rows: Int, search: String): [Order!]!
+    getDashboardTotal(startingDate: String, endingDate: String, restaurant: String!): DashboardTotal!
+    getDashboardSales(startingDate: String, endingDate: String, restaurant: String!): DashboardSales!
+    getDashboardOrders(startingDate: String, endingDate: String, restaurant: String!): DashboardOrders!
+    getDashboardData(startingDate: String, endingDate: String): DashboardData!
+    configuration: Configuration!
+    orderCount(restaurant: String!): Int!
+    getActiveOrders(restaurantId: ID): [Order!]!
+    getActiveOrdersWithPagination(page: Int, rowsPerPage: Int, search: String, restaurantId: ID): OrderPagination!
+    ridersByZone(id: String!): [Rider!]!
+    zones: [Zone!]!
+    vendors: [Vendor!]!
+    getVendor(id: String!): Vendor
+    taxes: [Tax!]!
+    coupons(page: Int, rowsPerPage: Int, search: String): CouponResult!
+    cuisines: [Cuisine!]!
+    banners: [Banner!]!
+    bannerActions: [String!]!
+    tips: [Tip!]!
+    addons: [Addon!]!
+    options: [Option!]!
+    getPaymentStatuses: [String!]!
+    restaurantByOwner(id: String): Vendor
+    restaurantList: [Restaurant!]!
+    restaurants: [Restaurant!]!
+    restaurant(id: String): Restaurant
+    getRestaurantDetail(id:String!):Restaurant
+    offers: [Offer!]!
+    sections: [Section!]!
+    pageCount(restaurant: String!): Int!
+    users(page: Int, rowsPerPage: Int, search: String): UserResult!
+    riders(page: Int, rowsPerPage: Int, search: String): RiderResult!
+    availableRiders: [Rider!]!
+    withdrawRequests(page: Int, rowsPerPage: Int, search: String): WithdrawRequestResult!
+}

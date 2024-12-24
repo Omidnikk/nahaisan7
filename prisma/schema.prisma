@@ -1,0 +1,437 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String?   @unique
+  phone        String?   @unique
+  addresses    Address[]
+  orders       Order[]
+  reviews      Review[]
+  pushToken    String?
+  profileImage String?
+  isVerified   Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Address {
+  id              Int      @id @default(autoincrement())
+  location        Location @relation(fields: [locationId], references: [id])
+  locationId      Int
+  deliveryAddress String?
+  details         String?
+  label           String?
+  type            String?
+  user            User     @relation(fields: [userId], references: [id])
+  userId          Int
+  order           Order?   @relation(fields: [orderId], references: [id])
+  orderId         Int?     @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Location {
+  id          Int          @id @default(autoincrement())
+  latitude    Float
+  longitude   Float
+  address     String?
+  city        String?
+  state       String?
+  addresses   Address[]
+  restaurants Restaurant[]
+  zones       Zone[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Order {
+  id                  Int       @id @default(autoincrement())
+  deliveryAddress     Address?
+  deliveryCharges     Decimal
+  orderAmount         Decimal
+  paidAmount          Decimal
+  paymentMethod       String
+  user                User      @relation(fields: [userId], references: [id])
+  userId              Int
+  items               OrderItem[]
+  reason              String?
+  status              String
+  paymentStatus       String
+  orderStatus         String
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  review              Review?
+  rider               Rider?    @relation(fields: [riderId], references: [id])
+  riderId             Int?
+  restaurant          Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId        Int
+  zone                Zone?     @relation(fields: [zoneId], references: [id])
+  zoneId              Int?
+  isPickedUp          Boolean    @default(false)
+  tipping             Decimal?
+  taxationAmount      Decimal?
+  deliveryTime       DateTime?
+  estimatedDeliveryTime  DateTime?
+  acceptedAt           DateTime?
+  deliveredAt          DateTime?
+  cancelledAt          DateTime?
+  preparationTime      DateTime?
+  cancellationReason     String?
+
+}
+
+model OrderItem {
+  id                  Int       @id @default(autoincrement())
+  food                Food      @relation(fields: [foodId], references: [id])
+  foodId              Int
+  variation           Variation @relation(fields: [variationId], references: [id])
+  variationId         Int
+  addons              Addon[]
+  specialInstructions String?
+  quantity            Int
+  order               Order     @relation(fields: [orderId], references: [id])
+  orderId             Int
+  title               String?
+  description         String?
+  image               String?
+  isActive            Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model Food {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String?
+  image       String?
+  variations  Variation[]
+  orderItems  OrderItem[]
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
+  isActive    Boolean     @default(true)
+  sku         String?
+  ingredients String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Variation {
+  id         Int         @id @default(autoincrement())
+  title      String?
+  price      Decimal
+  discounted Boolean
+  food       Food        @relation(fields: [foodId], references: [id])
+  foodId     Int
+  addons     Addon[]     @relation("VariationToAddon")
+  orderItems OrderItem[]
+   image       String?
+  stock     Int?
+}
+
+model Addon {
+  id              Int         @id @default(autoincrement())
+  title           String
+  description     String?
+  quantityMinimum Int
+  quantityMaximum Int
+  options         Option[]
+  orderItems      OrderItem[]
+  variations      Variation[] @relation("VariationToAddon")
+  restaurant    Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId  Int?
+  isActive        Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model Option {
+  id           Int         @id @default(autoincrement())
+  title        String
+  description  String?
+  price        Decimal
+  addon        Addon?      @relation(fields: [addonId], references: [id])
+  addonId      Int?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId Int?
+    isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Review {
+  id           Int        @id @default(autoincrement())
+  order        Order      @relation(fields: [orderId], references: [id])
+  orderId      Int        @unique
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId Int
+  user         User       @relation(fields: [userId], references: [id])
+  userId       Int
+  rating       Int
+  description  String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  // images String[]
+}
+
+model Rider {
+  id                  Int               @id @default(autoincrement())
+  name                String
+  username            String?           @unique
+  password            String?
+  phone               String?           @unique
+  available           Boolean           @default(true)
+  zone                Zone?             @relation(fields: [zoneId], references: [id])
+  zoneId              Int?
+  orders              Order[]
+  currentWalletAmount Decimal?
+  withdrawRequests    WithdrawRequest[]
+  profileImage        String?
+  vehicleType         String?
+  licenseNumber      String?
+  location           String?
+   createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Restaurant {
+  id                     Int           @id @default(autoincrement())
+  orderPrefix            String?
+  name                   String
+  slug                   String?       @unique
+  image                  String?
+  logo                   String?
+  address                String
+  location               Location?     @relation(fields: [locationId], references: [id])
+  locationId             Int?
+  deliveryBounds         String?
+  username               String?
+  password               String?
+  deliveryTime           String?
+  minimumOrder           Decimal?
+  isActive               Boolean       @default(true)
+  commissionRate         Decimal?
+  tax                    Decimal?
+  owner                  Vendor        @relation(fields: [ownerId], references: [id])
+  ownerId                Int
+  shopType               String?
+  categories             Category[]
+  addons                 Addon[]
+  options                Option[]
+  openingTimes           OpeningTime[]
+  reviews                Review[]
+  orders                 Order[]
+  offers                 Offer[]
+  sections               Section[]
+  stripeDetailsSubmitted Boolean       @default(false)
+  isAvailable            Boolean       @default(true)
+  postCode               String?
+  city                   String?
+  cuisines               Cuisine[]     @relation("RestaurantToCuisine")
+  isFeatured   Boolean   @default(false)
+  rating Decimal?
+   minDeliveryTime    Int?
+  maxDeliveryTime     Int?
+  deliveryFee         Decimal?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model OpeningTime {
+  id           Int        @id @default(autoincrement())
+  day          String
+  times        String?
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId Int
+  type         String?
+   createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Zone {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  location    Location? @relation(fields: [locationId], references: [id])
+  locationId  Int?
+  isActive Boolean @default(true)
+  riders   Rider[]
+  orders   Order[]
+   createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Vendor {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  userType    String
+  restaurants Restaurant[]
+    name String
+    phone String?
+    addresses String?
+    isVerified   Boolean   @default(false)
+     createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Configuration {
+  id                     Int      @id @default(autoincrement())
+  email                  String?
+  emailName              String?
+  password               String?
+  enableEmail            Boolean?
+  clientId               String?
+  clientSecret           String?
+  sandbox                Boolean?
+  publishableKey         String?
+  secretKey              String?
+  currency               String?
+  currencySymbol         String?
+  deliveryRate           Float?
+  twilioAccountSid       String?
+  twilioAuthToken        String?
+  twilioPhoneNumber      String?
+  twilioEnabled          Boolean?
+  formEmail              String?
+  sendGridApiKey         String?
+  sendGridEnabled        Boolean?
+  sendGridEmail          String?
+  sendGridEmailName      String?
+  sendGridPassword       String?
+  dashboardSentryUrl     String?
+  webSentryUrl           String?
+  apiSentryUrl           String?
+  customerAppSentryUrl   String?
+  restaurantAppSentryUrl String?
+  riderAppSentryUrl      String?
+  googleApiKey           String?
+  cloudinaryUploadUrl    String?
+  cloudinaryApiKey       String?
+  webAmplitudeApiKey     String?
+  appAmplitudeApiKey     String?
+  webClientID            String?
+  androidClientID        String?
+  iOSClientID            String?
+  expoClientID           String?
+  googleMapLibraries     String?
+  googleColor            String?
+  termsAndConditions     String?
+  privacyPolicy          String?
+  testOtp                String?
+  firebaseKey            String?
+  authDomain             String?
+  projectId              String?
+  storageBucket          String?
+  msgSenderId            String?
+  appId                  String?
+  measurementId          String?
+  isPaidVersion          Boolean?
+  skipEmailVerification  Boolean?
+  skipMobileVerification Boolean?
+  costType               String?
+  vapidKey               String?
+}
+
+model Taxation {
+  id              Int     @id @default(autoincrement())
+  taxationCharges Decimal
+  enabled         Boolean
+  title String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Coupon {
+  id       Int     @id @default(autoincrement())
+  title    String
+  discount Decimal
+  enabled  Boolean
+   code     String?
+   expiryDate DateTime?
+    minimumOrderAmount   Decimal?
+    maximumDiscountAmount   Decimal?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Cuisine {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  image       String?
+  shopType    String?
+  restaurants Restaurant[] @relation("RestaurantToCuisine")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Banner {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  action      String?
+  screen      String?
+  file        String?
+  parameters  String?
+    isActive     Boolean   @default(true)
+     createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Tipping {
+  id            Int     @id @default(autoincrement())
+  tipVariations String?
+  enabled       Boolean
+    createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Category {
+  id           Int        @id @default(autoincrement())
+  title        String
+  foods        Food[]
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId Int
+    createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Section {
+  id          Int          @id @default(autoincrement())
+  name        String
+  enabled     Boolean
+  restaurants Restaurant[]
+   createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Offer {
+  id          Int          @id @default(autoincrement())
+  name        String
+  tag         String?
+  restaurants Restaurant[]
+  discount    Decimal?
+    startDate   DateTime?
+   endDate DateTime?
+   minimumOrderAmount   Decimal?
+     createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model WithdrawRequest {
+  id            Int      @id @default(autoincrement())
+  requestId     String   @unique
+  requestAmount Decimal
+  requestTime   DateTime @default(now())
+  rider         Rider    @relation(fields: [riderId], references: [id])
+  riderId       Int
+  status        String
+   updatedAt    DateTime  @updatedAt
+}

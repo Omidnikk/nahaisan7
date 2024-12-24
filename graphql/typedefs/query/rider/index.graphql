@@ -1,0 +1,8 @@
+type Query {
+    # profile(id:String): Rider
+    configuration: Configuration
+    riderOrders: [Order!]!
+    riderEarnings(id: String, offset:Int): [RiderEarning!]
+    riderWithdrawRequests(id: String, offset:Int): [RiderWithdrawRequest!]
+    defaultRiderCreds: DefaultRiderCreds
+}

@@ -1,0 +1,16 @@
+type Mutation {
+  sendChatMessage(
+    orderId: ID!
+    messageInput: ChatMessageInput!
+  ): ChatMutationResponse
+  restaurantLogin(username: String!, password: String!): RestaurantLoginResponse
+  acceptOrder(_id: String!, time: String): OrderResponse
+  cancelOrder(_id: String!, reason: String!): OrderResponse
+  orderPickedUp(_id: String!): OrderResponse
+  saveRestaurantToken(
+    token: String
+    isEnabled: Boolean
+  ): RestaurantTokenResponse
+  toggleAvailability: RestaurantAvailabilityResponse
+  muteRing(orderId: String): MuteRingResponse
+}

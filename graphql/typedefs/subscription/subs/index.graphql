@@ -1,0 +1,13 @@
+type Subscription {
+  orderStatusChanged(userId: String!): OrderStatusChangeResponse
+  subscriptionRiderLocation(riderId: String!): RiderLocation
+  subscriptionOrder(id: String!): SubscriptionOrderResponse
+  subscriptionNewMessage(order: ID!): Chat
+  subscriptionZoneOrders(zoneId: String!): SubscriptionZoneOrdersResponse
+  subscriptionAssignRider(riderId: String!): SubscriptionAssignRiderResponse
+  subscribePlaceOrder(restaurant: String!): SubscribePlaceOrderResponse
+  subscribeOrderStatus(_id: String!): SubscriptionOrderStatusResponse
+  subscriptionOrder(id: String!): SubscriptionOrderType
+  orderStatusChanged(userId: String!): OrderStatusChangeResponse
+  subscriptionNewMessage(order: ID!): Chat
+}

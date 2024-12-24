@@ -1,0 +1,181 @@
+input AddressInput{
+    label:String
+    deliveryAddress: String
+    details: String
+    location: LocationInput
+    selected: Boolean
+}
+input LocationInput{
+    coordinates: [Float!]!
+}
+input OrderInput{
+    food:String!
+    quantity:Int!
+    variation:String!
+    addons: [String!]
+}
+input SectionInput {
+  name: String!
+  description: String
+}
+input ChatMessageInput{
+    message:String
+}
+input UserInput{
+    phone:String
+    email:String
+    password:String
+    name:String
+    notificationToken:String
+    appleId:String
+}
+input UpdateUserInput{
+    name:String
+    phone: String
+    phoneIsVerified:Boolean
+    emailIsVerified:Boolean
+}
+type  FoodInput {
+    _id: ID
+    title:String!
+    description: String
+    variations:[VariationInput!]
+    image: String
+    isActive:Boolean
+    restaurant:String!
+    categoryId:String!
+}
+type VariationInput{
+     _id: ID
+    title: String!
+    price: Float!
+    discounted: Float
+    addons:[Boolean]
+}
+type CategoryInput{
+    _id:ID
+    title:String!
+    restaurant:String!
+}
+type RestaurantInput {
+    _id: ID
+    orderId: Int
+    orderPrefix: String
+    name: String
+    slug:String
+    image: String
+    logo:String
+    address: String
+    username:String
+    password:String
+    location: CoordinatesInput
+  isAvailable: Boolean
+    minimumOrder: Float
+    tax: Float
+    shopType:String
+    cuisines:[String]
+}
+input EmailConfigurationInput {
+    _id:ID
+    email:String!
+  emailName:String
+  password:String
+   enableEmail:Boolean
+}
+input FormEmailConfigurationInput {
+  _id:ID
+    formEmail:String
+}
+input SendGridConfigurationInput{
+    _id:ID
+    sendGridApiKey:String
+    sendGridEnabled:Boolean
+  sendGridEmail:String
+    sendGridEmailName:String
+    sendGridPassword:String
+}
+input FirebaseConfigurationInput{
+   _id:ID
+  firebaseKey:String
+    authDomain:String
+    projectId:String
+  storageBucket:String
+    msgSenderId:String
+  appId:String
+    measurementId:String
+    vapidKey:String
+}
+input SentryConfigurationInput {
+    _id:ID
+    dashboardSentryUrl:String
+  webSentryUrl:String
+    apiSentryUrl:String
+  customerAppSentryUrl:String
+    restaurantAppSentryUrl:String
+    riderAppSentryUrl:String
+}
+input GoogleApiKeyConfigurationInput {
+   _id:ID
+  googleApiKey:String
+}
+input CloudinaryConfigurationInput {
+    _id:ID
+    cloudinaryUploadUrl:String
+   cloudinaryApiKey:String
+}
+input AmplitudeApiKeyConfigurationInput {
+    _id:ID
+    webAmplitudeApiKey:String
+  appAmplitudeApiKey:String
+}
+input GoogleClientIDConfigurationInput{
+  _id:ID
+    webClientID:String
+  androidClientID:String
+    iOSClientID:String
+    expoClientID:String
+}
+input WebConfigurationInput {
+    _id:ID
+   googleMapLibraries:String
+    googleColor:String
+}
+input AppConfigurationsInput{
+     _id:ID
+  termsAndConditions:String
+    privacyPolicy:String
+    testOtp:String
+}
+input DeliveryCostConfigurationInput {
+     _id:ID
+  deliveryRate:Float
+  costType:String
+}
+input PaypalConfigurationInput{
+    _id:ID
+    clientId:String
+    clientSecret:String
+  sandbox:Boolean
+}
+input StripeConfigurationInput{
+ _id:ID
+  publishableKey:String
+    secretKey:String
+}
+input TwilioConfigurationInput{
+  _id:ID
+    twilioAccountSid:String
+  twilioAuthToken:String
+  twilioPhoneNumber:String
+    twilioEnabled:Boolean
+}
+input VerificationConfigurationInput {
+    _id:ID
+    skipEmailVerification:Boolean
+  skipMobileVerification:Boolean
+}
+input CurrencyConfigurationInput {
+     _id:ID
+  currency:String
+  currencySymbol:String
+}
